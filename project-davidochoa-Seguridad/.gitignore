@@ -2,6 +2,9 @@
 build/
 dist/
 *.spec
+build_venv/
+temp_venv/
+victim_package/
 
 # archivos de python
 __pycache__/
@@ -16,6 +19,7 @@ texto_cifrado.enc
 # archivos temporales
 *.tmp
 *.log
+transfer_package.sh
 
 # archivos del sistema
 .DS_Store
