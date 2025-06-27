@@ -1,0 +1,22 @@
+# archivos de compilacion
+build/
+dist/
+*.spec
+
+# archivos de python
+__pycache__/
+*.pyc
+*.pyo
+
+# archivos generados por keylogger
+key_log.txt
+texto_concatenado.txt
+texto_cifrado.enc
+
+# archivos temporales
+*.tmp
+*.log
+
+# archivos del sistema
+.DS_Store
+Thumbs.db
