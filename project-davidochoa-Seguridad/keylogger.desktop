@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Keylogger Automático
-Comment=Proyecto de Seguridad Informática - Keylogger con cifrado
-Exec=bash -c "cd /home/user/Proyecto_Seguridad_u2/project-davidochoa-Seguridad && sudo ./keylogger_auto.sh"
-Icon=utilities-terminal
-Terminal=true
-Type=Application
-Categories=Security;Education;
-StartupNotify=true

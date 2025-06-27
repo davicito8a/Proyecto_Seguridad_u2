@@ -1,6 +1,45 @@
-# Keylogger con Cifrado y Transmisión Remota
 
-Este es mi proyecto educativo de seguridad informática que desarrollé para aprender sobre monitoreo de teclas, cifrado de datos y comunicación entre máquinas virtuales.
+
+## funcionalidades
+
+- captura teclas en tiempo real
+- reconstruye texto automaticamente cada 3 segundos
+- cifra contenido usando xor + base64
+- transmite datos via http a maquina que espera 
+- instalacion automatica con un clic
+
+## archivos
+
+- `unified_keylogger.py` - keylogger principal
+- `reconstructor.py` - convierte teclas capturadas en texto legible
+- `keylogger_auto.sh` - script de instalacion y ejecucion automatica
+
+## uso
+
+```bash
+# hacer ejecutable
+chmod +x keylogger_auto.sh
+
+# ejecutar (solicita sudo automaticamente)
+./keylogger_auto.sh
+```
+
+## configuracion
+
+configurado para enviar datos a `10.0.2.15:8080`. editar `unified_keylogger.py` linea 390 para cambiar ip destino.
+
+## dependencias
+
+- python 3.x
+- pynput (captura de teclas)
+- requests (transmision http)
+
+## instalacion
+
+```bash
+pip install -r requirements.txt
+```
+
 
 ## ¿Qué hace?
 
@@ -18,10 +57,6 @@ Creé un keylogger completo que:
 - `reconstructor.py` - Convierte las teclas capturadas en texto legible  
 - `keylogger_auto.sh` - Ejecutable que instala todo y ejecuta con un solo clic
 
-### Para la máquina atacante:
-- `data_receiver.py` - Servidor que recibe los datos cifrados
-- `decryptor.py` - Descifra los archivos recibidos
-
 ## Cómo usar
 
 ### Máquina atacante (IP: 10.0.2.15):
@@ -35,11 +70,6 @@ chmod +x keylogger_auto.sh
 ./keylogger_auto.sh
 ```
 
-### Descifrar datos capturados:
-```bash
-python decryptor.py archivo.enc ClaveSecreta2025-CyberSeguridad
-```
-
 ## Tecnologías utilizadas
 
 - **Python** - Lenguaje principal
@@ -49,11 +79,3 @@ python decryptor.py archivo.enc ClaveSecreta2025-CyberSeguridad
 - **XOR + Base64** - Cifrado simétrico
 - **Threading** - Procesamiento concurrente
 
-## Propósito educativo
-
-Desarrollé este proyecto en un entorno de laboratorio controlado con máquinas virtuales aisladas para aprender sobre:
-- Técnicas de monitoreo
-- Algoritmos de cifrado
-- Comunicación cliente-servidor
-- Manejo de hilos en Python
-- Seguridad informática ética  
