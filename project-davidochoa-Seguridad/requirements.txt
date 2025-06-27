@@ -1,0 +1,13 @@
+# configuración automática para el proyecto de seguridad informática
+# instala las dependencias necesarias para el keylogger y receptor
+
+# dependencias del keylogger unificado
+requests>=2.28.0
+pynput>=1.7.6
+
+# dependencias del servidor receptor
+flask>=2.3.0
+
+# dependencias para análisis (opcional)
+matplotlib>=3.5.0
+pandas>=1.5.0
