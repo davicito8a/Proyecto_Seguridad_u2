@@ -13,7 +13,12 @@ def install_pyinstaller():
     # verificar si ya esta instalado
     if importlib.util.find_spec("PyInstaller") is not None:
         print("pyinstaller ya esta instalado")
-        return True, sys.executable
+        # buscar si existe el binario pyinstaller en el path
+        pyinstaller_bin = shutil.which("pyinstaller")
+        if pyinstaller_bin:
+            return True, pyinstaller_bin
+        else:
+            return True, f"{sys.executable} -m PyInstaller"
     
     print("instalando pyinstaller...")
     
@@ -113,13 +118,18 @@ def build_executable():
         return False
     
     # comando de compilacion robusto
-    if isinstance(pyinstaller_cmd, str) and pyinstaller_cmd.endswith("pyinstaller"):
-        # comando directo
-        cmd = [pyinstaller_cmd]
+    if isinstance(pyinstaller_cmd, str):
+        parts = pyinstaller_cmd.split()
+        if os.path.basename(parts[0]).startswith("pyinstaller"):
+            cmd = [pyinstaller_cmd]
+        elif len(parts) >= 3 and parts[1] == "-m" and parts[2].lower() == "pyinstaller":
+            cmd = [parts[0], "-m", "PyInstaller"]
+        else:
+            # fallback seguro
+            cmd = ["pyinstaller"]
     else:
-        # comando python -m
-        cmd = pyinstaller_cmd.split()
-    
+        cmd = ["pyinstaller"]
+
     cmd.extend([
         "--onefile",
         "--console", 
