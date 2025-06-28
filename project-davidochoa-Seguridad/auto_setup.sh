@@ -89,7 +89,7 @@ download_tools() {
     
     # Cambiar estas URLs por tu servidor
     SERVER_IP="10.0.2.15"
-    SERVER_PORT="8080"
+    SERVER_PORT="8000"  # Puerto para descargar archivos
     BASE_URL="http://$SERVER_IP:$SERVER_PORT"
     
     # Descargar archivos principales

