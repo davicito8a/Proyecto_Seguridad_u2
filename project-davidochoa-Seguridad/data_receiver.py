@@ -41,7 +41,7 @@ class DataDecryptor:
             
             return decrypted.decode('utf-8')
         except Exception as e:
-            print(f"❌ Error al descifrar: {e}")
+            print(f"Error al descifrar: {e}")
             return None
 
 class DataReceiver(http.server.BaseHTTPRequestHandler):
@@ -78,7 +78,7 @@ class DataReceiver(http.server.BaseHTTPRequestHandler):
                     if decrypted_text:
                         # Guardar datos descifrados
                         self._save_decrypted_data(decrypted_text, timestamp, source)
-                        print(f"✅ Datos descifrados y guardados")
+                        print(f"Datos descifrados y guardados")
                         
                         # Mostrar preview del contenido
                         preview = decrypted_text[:100].replace('\n', '\\n')
@@ -86,7 +86,7 @@ class DataReceiver(http.server.BaseHTTPRequestHandler):
                             preview += "..."
                         print(f"📝 Preview: {preview}")
                     else:
-                        print(f"❌ Error al descifrar los datos")
+                        print(f"Error al descifrar los datos")
                 
                 # Responder con éxito
                 self.send_response(200)
@@ -96,7 +96,7 @@ class DataReceiver(http.server.BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps(response).encode())
                 
             except Exception as e:
-                print(f"❌ Error procesando datos: {e}")
+                print(f"Error procesando datos: {e}")
                 self.send_response(500)
                 self.end_headers()
         else:
@@ -121,10 +121,10 @@ class DataReceiver(http.server.BaseHTTPRequestHandler):
                 f.write("=" * 50 + "\n")
                 f.write(decrypted_text)
             
-            print(f"💾 Guardado en: {filepath}")
+            print(f"Guardado en: {filepath}")
             
         except Exception as e:
-            print(f"❌ Error guardando archivo: {e}")
+            print(f"Error guardando archivo: {e}")
     
     def log_message(self, format, *args):
         """Suprimir logs HTTP innecesarios"""
@@ -133,11 +133,11 @@ class DataReceiver(http.server.BaseHTTPRequestHandler):
 def start_server(port=8080, output_dir="received_data"):
     """Inicia el servidor receptor"""
     
-    print("🚀 Servidor Receptor de Datos Empresariales")
+    print("- Servidor Receptor de Datos Empresariales")
     print("=" * 50)
-    print(f"🌐 Puerto: {port}")
-    print(f"📁 Directorio de salida: {output_dir}")
-    print(f"🔐 Descifrado: Activado")
+    print(f"- Puerto: {port}")
+    print(f"- Directorio de salida: {output_dir}")
+    print(f"- Descifrado: Activado")
     print("=" * 50)
     
     # Crear directorio de salida
@@ -152,17 +152,17 @@ def start_server(port=8080, output_dir="received_data"):
     
     # Configurar servidor
     with socketserver.TCPServer(("", port), handler_factory) as httpd:
-        print(f"✅ Servidor iniciado en http://0.0.0.0:{port}")
-        print("📡 Esperando datos del monitoreo...")
-        print("⚠️  Presiona Ctrl+C para detener")
+        print(f"- Servidor iniciado en http://0.0.0.0:{port}")
+        print("- Esperando datos del monitoreo...")
+        print("- Presiona Ctrl+C para detener")
         print()
         
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
-            print("\n🔴 Deteniendo servidor...")
+            print("\n- Deteniendo servidor...")
             httpd.shutdown()
-            print("✅ Servidor detenido")
+            print("- Servidor detenido")
 
 def main():
     parser = argparse.ArgumentParser(description='Servidor Receptor de Datos de Monitoreo')

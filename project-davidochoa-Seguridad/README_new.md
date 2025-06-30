@@ -3,19 +3,7 @@
 ## 📋 Descripción
 Sistema de monitoreo y diagnóstico de rendimiento empresarial para laboratorios de seguridad. Captura eventos del sistema, los procesa y envía reportes cifrados a un servidor central.
 
-## 🎯 Características de Seguridad Implementadas
 
-### 🔒 Técnicas de Ofuscación
-- **Nombres de archivos y clases**: Renombrados para parecer software legítimo empresarial
-- **Strings cifrados**: Configuraciones importantes codificadas en base64
-- **Funciones ofuscadas**: Nombres de métodos que sugieren propósito empresarial
-- **Metadatos falsos**: Headers y comentarios que ocultan el propósito real
-
-### 🛡️ Evasión Básica
-- **Modo stealth**: Ejecución completamente silenciosa sin output
-- **Instalación en directorios ocultos**: `/tmp/.sys_tools/`
-- **Procesos en background**: Ejecución con `nohup` y daemon threads
-- **Nombres legítimos**: Archivos y procesos que parecen herramientas del sistema
 
 ## 📁 Estructura del Proyecto
 
